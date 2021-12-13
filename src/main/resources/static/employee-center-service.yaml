@@ -1,0 +1,395 @@
+openapi: 3.0.2
+info:
+  title: Employee Center Service
+  description:  Employee Service acts as middle layed between the Employees and Companies
+  contact:
+    name: peopleflw
+    url: ''
+    email: fadymagdy32@gmail.com
+  license:
+    name: Copyright 2020 peopleflw
+    url: ''
+  version: 0.0.1
+
+tags:
+  - name: Employee Center Service
+    description: Employee Center Service
+
+security:
+  - BearerAuth: []
+
+servers:
+  - url: '{protocol}://{server}:{port}'
+    description: Internal API
+    variables:
+      protocol:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'http'
+      server:
+        default: 'localhost'
+      port:
+        enum:
+          - '80'
+          - '443'
+          - '8080'
+          - '8443'
+          - '9090'
+        default: '8080'
+
+paths:
+  '/v1alpha/submitEmployee':
+    post:
+      tags:
+        - Add new employee
+      summary: add new employee
+      description: add new employee
+      operationId: 'submitEmployee'
+      requestBody:
+        description: The Employee details request body.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeRequestBody'
+        required: true
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        "401":
+          description: Un Authorized Request
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "403":
+          description: Forbidden Request
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Problem"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  '/v1alpha/submitEmployee/{employeeId}':
+    put:
+      tags:
+        - Edit the employee details
+      summary: update employee informations
+      description: update employee informations
+      operationId: 'updateEmployee'
+      parameters:
+        - name: employeeId
+          in: path
+          description: Unique identifier for employee
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 255
+      requestBody:
+        description: The Employee updated details request body.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        "401":
+          description: Un Authorized Request
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "403":
+          description: Forbidden Request
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Problem"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  '/v1alpha/getAllEmployees':
+    get:
+      tags:
+        - Get all employees
+      summary: get employees informations
+      description: get employees informations
+      operationId: 'getEmployees'
+      responses:
+        '200':
+          description: Respresentation of employees
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Employee"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        "401":
+          description: Un Authorized Request
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "403":
+          description: Forbidden Request
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Problem"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  '/v1alpha/updateStatus/{employeeId}/{status}':
+    post:
+      tags:
+        - Edit the employee details
+      summary: update employee informations
+      description: update employee informations
+      operationId: 'updateStatus'
+      parameters:
+        - name: employeeId
+          in: path
+          description: Unique identifier for employee
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 255
+        - name: status
+          in: path
+          description: New employee status
+          required: true
+          schema:
+            type: string
+            enum: [ IN-CHECK ,  APPROVED , ACTIVE]
+
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        "401":
+          description: Un Authorized Request
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "403":
+          description: Forbidden Request
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Problem"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+
+  schemas:
+
+    Employee:
+      type: object
+      description: The SMH message request body.
+        - id
+        - name
+        - age
+        - status
+        - location
+
+      properties:
+        id:
+          type: integer
+          description: employee id
+          example: 10
+          minLength: 0
+          maxLength: 255
+        name:
+          type: string
+          description: employee name
+          example: Ahmed Ibrahim
+          minLength: 0
+          maxLength: 255
+        age:
+          type: string
+          description: employee age
+          example: 30
+          minLength: 0
+          maxLength: 255
+        location:
+          type: string
+          description: employee location
+          example: Cairo / Egypt
+          minLength: 0
+          maxLength: 255
+        status:
+          type: string
+          description: ADDED
+          default: ADDED
+          enum:
+            - ADDED
+            - IN_CHECK
+            - APPROVED
+            - ACTIVE
+
+    EmployeeRequestBody:
+      type: object
+      description: The SMH message request body.
+      required:
+        - name
+        - age
+        - status
+        - location
+
+      properties:
+        name:
+          type: string
+          description: employee name
+          example: Ahmed Ibrahim
+          minLength: 0
+          maxLength: 255
+        age:
+          type: string
+          description: employee age
+          example: 30
+          minLength: 0
+          maxLength: 255
+        location:
+          type: string
+          description:  employee location
+          example: Cairo / Egypt
+          minLength: 0
+          maxLength: 255
+        status:
+          type: string
+          description: ADDED
+          default: ADDED
+          enum:
+            - ADDED
+            - IN_CHECK
+            - APPROVED
+            - ACTIVE
+
+
+    Response:
+      type: object
+      properties:
+        employeeId:
+          type: string
+          description: employee ID
+          minLength: 0
+          maxLength: 255
+        employeeName:
+          type: string
+          description: employee name
+          minLength: 0
+          maxLength: 255
+
+
+
+
+    Problem:
+      type: object
+      description: |
+        <b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats
+        for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+      properties:
+        type:
+          type: string
+          format: uri
+          description: |
+            An absolute URI that identifies the problem type.  When dereferenced,
+            it SHOULD provide human-readable documentation for the problem type
+            (e.g., using HTML).
+          default: 'about:blank'
+          example: ''
+        title:
+          type: string
+          nullable: true
+          description: |
+            A short, summary of the problem type. Written in English and readable
+            for engineers (usually not suited for non-technical stakeholders and
+            not localized); example: Service Unavailable
+          example: Service Unavailable.
+        status:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 100
+          maximum: 600
+          exclusiveMaximum: true
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          example: 500
+        detail:
+          type: string
+          nullable: true
+          description: A human readable explanation specific to this occurrence of the problem.
+          example: API call timed out.
+        instance:
+          type: string
+          format: uri
+          description: |
+            An absolute URI that identifies the specific occurrence of the problem.
+            It may or may not yield further information if dereferenced.
+
