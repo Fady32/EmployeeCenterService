@@ -37,8 +37,8 @@ Please provide a solution with the  above features with the following considerat
 
 To Execute the springboot application please run the following commands:
 
-docker build -f execute.Dockerfile -t springboot
-docker run -d -p 8080:8080 -t spring-boot 
+- docker build -f execute.Dockerfile -t springboot
+- docker run -d -p 8080:8080 -t spring-boot 
 
 open your browser on the home page of swagger :
 
